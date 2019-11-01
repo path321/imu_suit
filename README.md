@@ -18,18 +18,19 @@ Software Requirements:
 - Pyqtgraph
 
 Instructions:
--Connect IMU pins with Arduino board as follows:
+- Connect IMU pins with Arduino board as follows:
+
         VCC -> 3.3 V
         GND -> GND
         SCL -> A5
         SDA -> A4
         
--Run readValues.ino to achieve Arduino - PC connections
+- Run readValues.ino to achieve Arduino - PC connections
 
--Optionally, run calibrate_IMU.py, in order to find offset values for your IMU
+- Optionally, run calibrate_IMU.py, in order to find offset values for your IMU
  Copy the values above appropriately to connect_IMU.py 
  
--Run plotGyroAcc.py
+- Run plotGyroAcc.py
 
 Run and tested in Linux Ubuntu 16
 
