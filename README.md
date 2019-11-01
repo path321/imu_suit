@@ -25,7 +25,7 @@ Written in Python 3.5
         SCL -> A5
         SDA -> A4
         
-- Run readValues.ino to achieve Arduino - PC connections
+- Upload readValues.ino to Arduino board, in order to achieve Arduino - PC connections
 
 - Optionally, run calibrate_IMU.py, in order to find offset values for your IMU. 
 Then, copy the values above appropriately to connect_IMU.py 
