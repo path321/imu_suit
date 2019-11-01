@@ -27,8 +27,8 @@ Instructions:
         
 - Run readValues.ino to achieve Arduino - PC connections
 
-- Optionally, run calibrate_IMU.py, in order to find offset values for your IMU
- Copy the values above appropriately to connect_IMU.py 
+- Optionally, run calibrate_IMU.py, in order to find offset values for your IMU. 
+Then, Copy the values above appropriately to connect_IMU.py 
  
 - Run plotGyroAcc.py
 
