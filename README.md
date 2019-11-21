@@ -30,7 +30,7 @@ Written in Python 3.5
 - Optionally, run calibrate_IMU.py, in order to find offset values for your IMU. 
 Then, copy the values above appropriately to connect_IMU.py 
  
-- Run plotGyroAcc.py
+- Run IMU_GUI.py
 
 Run and tested in Linux Ubuntu 16
 
