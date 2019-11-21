@@ -2,9 +2,15 @@ import serial
 import numpy as np
 import sys
 
+from various_def import linearMap
+
 baudrate_user = 9600
 port = "/dev/ttyACM0" #Port name , check before running .py script
 MAX_VAL = int('0xffff',16)//2 #Maximum 16-bit value
+
+gyroScaleFactor = {250:131, 500:65.5, 1000:32.8, 2000:16.4} # from datasheet
+accScaleFactor = {2:16384, 4:8192, 8:4096, 16:2048}
+
 GYRO_LIMIT = 250 
 ACC_LIMIT = 2
 
@@ -18,7 +24,7 @@ except:
 
 class IMU_Data:
     # Organize data from IMU
-    def __init__(self,dataInit = np.zeros(7)):
+    def __init__(self):
 
         #Calibrate offset values, taken from results of calibrate_IMU.py
         self.accX_offset = -935
@@ -30,25 +36,24 @@ class IMU_Data:
         self.gyZ_offset = 83
 
         #Initialize values
-        self.accX = dataInit[0] 
-        self.accY = dataInit[1] 
-        self.accZ = dataInit[2] 
-        self.tmpr = dataInit[3]  
-        self.gyX = dataInit[4] 
-        self.gyY = dataInit[5] 
-        self.gyZ = dataInit[6] 
+        self.accX = 0 
+        self.accY = 0 
+        self.accZ = 0
+        self.tmpr = 0  
+        self.gyX = 0 
+        self.gyY = 0 
+        self.gyZ = 0 
 
-        self.rawValue = dataInit
-
+        self.rawValue = np.zeros(7)
 
     def readSerial(self,silent = False): # Read Data from serial input ( Arduino )
 
         inpt=[]
         error_in_comm = False
-
+        
         while(arduino.read_until().strip()!=b"S"):
             pass
-
+        
         for i in range(7):
             try:
                 inpt.append(float(arduino.read_until().strip()))
@@ -63,9 +68,7 @@ class IMU_Data:
         else:
             self.rawValue=inpt #return data
 
-    def linearMap(self,value,newMax,newMin,oldMax,oldMin):  #Map values to new limits
-        return (value-oldMin)*(newMax-newMin)/(oldMax-oldMin)+newMin
-
+    
     def getAccRaw(self): #Accelerometer values after offset correction
         
         self.accX = self.rawValue[0] + self.accX_offset
@@ -74,26 +77,13 @@ class IMU_Data:
         return np.array([self.accX, self.accY, self.accZ])
         
     def getAcc(self): #Accelerometer values after offset correction, in degrees/s
-        
-        values = self.getAccRaw()
-        values = values / 16394 # <==> (value + 32767)*(2-(-2))/(32767-(-32767))-2
-        
-        #For different limits, change variable ACC_LIMIT at start and uncomment region below instead
-##    
-##        for i in range(3):
-##            values[i] = self.linearMap(values[i],ACC_LIMIT,-ACC_LIMIT,MAX_VAL,-MAX_VAL)
-        return values
-
+        return self.getAccRaw() / accScaleFactor[ACC_LIMIT] 
+    
     def getTmprRaw(self): #Temperature values after offset correction
-        
-        self.tmpr = (self.rawValue[3] + self.tmpr_offset)
-        return np.array([self.tmpr])
+        return np.array([self.rawValue[3] + self.tmpr_offset])
 
     def getTmpr(self): #Temperature values after offset correction, in Celsius
-
-        value = self.getTmprRaw() 
-        value = self.linearMap(value,85,-40,MAX_VAL,-MAX_VAL)
-        return value
+        return linearMap(self.getTmprRaw(),85,-40,MAX_VAL,-MAX_VAL)
         
     def getGyroRaw(self): #Gyroscope values after offset correction
         
@@ -103,15 +93,7 @@ class IMU_Data:
         return np.array([self.gyX, self.gyY, self.gyZ])
 
     def getGyro(self): #Gyroscope values after offset correction, in g
-        
-        values = self.getGyroRaw()
-        values = values / 131 # <==> (value + 32767)*(250-(-250))/(32767-(-32767))-250
-
-        #For different limits, change variable GYRO_LIMIT at start and uncomment region below
-##        
-##        for i in range(3):
-##            values[i] = self.linearMap(values[i],GYRO_LIMIT,-GYRO_LIMIT,MAX_VAL,-MAX_VAL)
-        return values
+        return self.getGyroRaw() / gyroScaleFactor[GYRO_LIMIT]
 
     def getRawValues(self): #IMU values, without offset correction
         return np.array(self.rawValue)
