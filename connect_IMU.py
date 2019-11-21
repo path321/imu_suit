@@ -2,7 +2,7 @@ import serial
 import numpy as np
 import sys
 
-from various_def import linearMap
+from various_func import linearMap
 
 baudrate_user = 9600
 port = "/dev/ttyACM0" #Port name , check before running .py script
