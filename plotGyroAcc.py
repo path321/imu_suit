@@ -5,7 +5,7 @@ import pyqtgraph as pg
 import sys
 
 from connect_IMU import *
-from various_def import appendData
+from various_func import appendData
 
 UiName = 'windowQt.ui' # Put the name of respective .ui file (QtDesigner)
 
