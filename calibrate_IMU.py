@@ -1,28 +1,28 @@
 import numpy as np
 from time import clock,sleep
-import connect_IMU
-from textwrap import dedent
+from connect_IMU import *
 
 MAX_VAL = int('0xffff',16)//2
 
 def main():
 
-    numOfSamples = 1000
-    values=np.zeros(7)
-    testCal=connect_IMU.IMU_Data()
+    numOfSamples = 300
+    inpt=IMU_Data()
 
     print("Please place IMU still on a flat surface, Z facing up")
     sleep(3)
     print("Calibration starting...")
     
-    sumVal=np.zeros(7)
-    
+    data=np.zeros((numOfSamples,7))
+
     for i in range(numOfSamples):
-        testCal.readSerial(True)
-        values = testCal.getRawValues()
-        sumVal = sumVal + values #element-wise addition, because of Numpy arrays
-        
-    mean = sumVal / numOfSamples
+        inpt.readSerial(True)
+        data[i]=inpt.getRawValues()
+    
+    calbVal=np.zeros(7)
+    
+    np.median(data,axis=0 , out=calbVal) # Median value => "Cancel" outliers + converge to mean value for large sample size
+    
 
     print("Calibration finished\n")
     
@@ -34,7 +34,7 @@ def main():
               Gyro Y  : %d
               Gyro Z  : %d"""
     
-    print(s % (numOfSamples,-mean[0],-mean[1],-(MAX_VAL/2 - mean[2]),-mean[4],-mean[5],-mean[6]))
+    print(s % (numOfSamples,-calbVal[0],-calbVal[1],(MAX_VAL/2 - calbVal[2]),-calbVal[4],-calbVal[5],-calbVal[6]))
 
 
 if __name__ == '__main__':

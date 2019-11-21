@@ -27,13 +27,13 @@ class IMU_Data:
     def __init__(self):
 
         #Calibrate offset values, taken from results of calibrate_IMU.py
-        self.accX_offset = -935
-        self.accY_offset = 6972
-        self.accZ_offset = 3919
+        self.accX_offset = -1624
+        self.accY_offset = 7308
+        self.accZ_offset = 3937
         self.tmpr_offset = 2200 #Heurestic
-        self.gyX_offset = -1957
-        self.gyY_offset = 669
-        self.gyZ_offset = 83
+        self.gyX_offset = -1971
+        self.gyY_offset = 660
+        self.gyZ_offset = 85
 
         #Initialize values
         self.accX = 0 
