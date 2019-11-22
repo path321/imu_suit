@@ -30,7 +30,7 @@ class IMU_Data:
         self.accX_offset = -1624
         self.accY_offset = 7308
         self.accZ_offset = 3937
-        self.tmpr_offset = 2200 #Heurestic
+        self.tmpr_offset = 2200 # <-Heurestic
         self.gyX_offset = -1971
         self.gyY_offset = 660
         self.gyZ_offset = 85
