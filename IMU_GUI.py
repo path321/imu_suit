@@ -44,7 +44,7 @@ class MyGraph_3_2(QtWidgets.QMainWindow):
 
         if self.chkbox.isChecked(): 
             for i in range(6):
-                self.listPlot[i].plot(self.hrz,self.vrt[i],pen=axisInfo[i%3][1],clear=True) #Plot graph
+                self.listPlot[i].plot(self.hrz,self.vrt[i],pen=axisInfo[i%3][1][0],clear=True) #Plot graph
             self.lcdNumber.display(self.inpt.getTmpr())
 
         #print("updateGraph took %.01f ms"%((clock()-t1)*1000)) #Uncomment for plot speed check
