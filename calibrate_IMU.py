@@ -32,9 +32,25 @@ def main():
               Acc Z : %d
               Gyro X  : %d
               Gyro Y  : %d
-              Gyro Z  : %d"""
+              Gyro Z  : %d\n\n"""
+
+    out = [-calbVal[0],-calbVal[1],(MAX_VAL/2 - calbVal[2]),-calbVal[4],-calbVal[5],-calbVal[6]]
+    print(s % (numOfSamples,out[0],out[1],out[2],out[3],out[4],out[5]))
+
+    while(True):
+        ans=input("Save to file y/n ?  ")
+        if(ans=='y'):
+            print("New values passed to calibration file")
+            np.savetxt("calib_values.txt",out,fmt="%d")
+            break
+        elif(ans=='n'):
+            print("Old values kept, new values not passed to calibration file")
+            break
+        else:
+            print("Wrong input, answer with 'y' or 'n'")
+
+        
     
-    print(s % (numOfSamples,-calbVal[0],-calbVal[1],(MAX_VAL/2 - calbVal[2]),-calbVal[4],-calbVal[5],-calbVal[6]))
 
 
 if __name__ == '__main__':

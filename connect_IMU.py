@@ -26,14 +26,16 @@ class IMU_Data:
     # Organize data from IMU
     def __init__(self):
 
+        inpt = np.loadtxt("calib_values.txt",dtype=int) # Load calibration values from respctive txt
+        
         #Calibrate offset values, taken from results of calibrate_IMU.py
-        self.accX_offset = -1624
-        self.accY_offset = 7308
-        self.accZ_offset = 3937
+        self.accX_offset = inpt[0]
+        self.accY_offset = inpt[1]
+        self.accZ_offset = inpt[2]
         self.tmpr_offset = 2200 # <-Heurestic
-        self.gyX_offset = -1971
-        self.gyY_offset = 660
-        self.gyZ_offset = 85
+        self.gyX_offset = inpt[3]
+        self.gyY_offset = inpt[4]
+        self.gyZ_offset = inpt[5]
 
         #Initialize values
         self.accX = 0 
