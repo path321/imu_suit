@@ -1,3 +1,4 @@
+
 import serial
 import numpy as np
 import sys
@@ -34,8 +35,6 @@ except:
     #Common problems : Different port name, .ino sketch not uploaded
     print("Serial connection failed\nCheck board connection or that .ino uploaded correctly")
     sys.exit()
-    
-
 class IMU_Data:
     # Organize data from IMU
     def __init__(self):
