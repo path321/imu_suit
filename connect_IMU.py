@@ -1,11 +1,12 @@
+
 import serial
 import numpy as np
 import sys
+import subprocess
 
 from various_func import linearMap
 
 baudrate_user = 9600
-port = "/dev/ttyACM0" #Port name , check before running .py script
 MAX_VAL = int('0xffff',16)//2 #Maximum 16-bit value
 
 gyroScaleFactor = {250:131, 500:65.5, 1000:32.8, 2000:16.4} # from datasheet
@@ -14,14 +15,26 @@ accScaleFactor = {2:16384, 4:8192, 8:4096, 16:2048}
 GYRO_LIMIT = 250 
 ACC_LIMIT = 2
 
+# Check which port is connected to board
+bashCommand = "ls /dev/ttyA*"
+process = subprocess.run(bashCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, shell=True)
+output = process.stdout
+error = process.stderr
+if output != '':
+    port = output.strip()
+else:
+    print("Error in connection, board not found, see error below for debugging:\n\n",error.strip())
+    sys.exit()
+
+
+
+
 try:
     arduino = serial.Serial(port,timeout=1, baudrate = baudrate_user)
 except:
     #Common problems : Different port name, .ino sketch not uploaded
-    print("Check the port connection")
+    print("Serial connection failed\nCheck board connection or that .ino uploaded correctly")
     sys.exit()
-    
-
 class IMU_Data:
     # Organize data from IMU
     def __init__(self):
