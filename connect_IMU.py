@@ -1,10 +1,8 @@
-
 import serial
 import numpy as np
 import sys
-import subprocess
 
-from various_func import linearMap
+from various_func import linearMap,runBash
 
 baudrate_user = 9600
 MAX_VAL = int('0xffff',16)//2 #Maximum 16-bit value
@@ -15,26 +13,56 @@ accScaleFactor = {2:16384, 4:8192, 8:4096, 16:2048}
 GYRO_LIMIT = 250 
 ACC_LIMIT = 2
 
+cli_flag=False
+
 # Check which port is connected to board
-bashCommand = "ls /dev/ttyA*"
-process = subprocess.run(bashCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, shell=True)
-output = process.stdout
-error = process.stderr
+output,error = runBash("ls /dev/ttyA*")
 if output != '':
     port = output.strip()
+    print("Arduino board found, connected in port "+port)
 else:
     print("Error in connection, board not found, see error below for debugging:\n\n",error.strip())
     sys.exit()
 
 
+#Check if 'arduino-cli' is installed on host
+output,error = runBash("which arduino-cli")
+if output!='':
+    cli_flag=True # arduino-cli is installed, thus will be used below for uploading .ino on board
+    # print("'arduino-cli' detected on your PC, using it to upload proper .ino files...")
+
+if(cli_flag):
+    out1, foo= runBash("arduino-cli board list")
+    out1=out1.split()
+    port = out1[6]
+    param_fqbn = out1[12]
+    
+    # Compile sketch
+    foo,error = runBash('arduino-cli compile --fqbn '+param_fqbn+' ./readValues/') 
+    if(error!=''):
+        print("Error during compiling sketch with 'arduino-cli', with error :",error,"\n\nTry buliding sketch with IDE and press 'Enter' ")
+        cli_flag=False
+    else:
+        # Upload sketch
+        foo,error = runBash("arduino-cli upload -p "+ port +" --fqbn "+ param_fqbn +" ./readValues/")
+        if(error!=''):
+            print("Error during uploading sketch with 'arduino-cli', with error :",error,"\n\nTry buliding sketch with IDE and press 'Enter' ")
+            cli_flag=False
+        
+    
+if not cli_flag:
+    print("Upload readValue.ino sketch and press 'Enter'")
+    input()
 
 
+# Connect serially host - board
 try:
     arduino = serial.Serial(port,timeout=1, baudrate = baudrate_user)
 except:
     #Common problems : Different port name, .ino sketch not uploaded
     print("Serial connection failed\nCheck board connection or that .ino uploaded correctly")
     sys.exit()
+    
 class IMU_Data:
     # Organize data from IMU
     def __init__(self):
