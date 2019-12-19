@@ -26,7 +26,7 @@ Written in Python 3.5
         SCL -> A5
         SDA -> A4
         
-- In case you don't have arduino-cli installed, upload *readValues.ino* manually to Arduino board, in order to achieve Arduino - PC connections
+- In case you have arduino-cli installed, *readValues.ino* is uploaded to Arduino automatically. Else , upload *readValues.ino* manually to board, in order to achieve Arduino - PC connections
 
 - Optionally, run *calibrate_IMU.py*, in order to find offset values for your IMU.
  
