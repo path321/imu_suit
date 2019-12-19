@@ -26,13 +26,13 @@ Written in Python 3.5
         SCL -> A5
         SDA -> A4
         
-- In case you don't have arduino-cli installed, upload readValues.ino to Arduino board, in order to achieve Arduino - PC connections
+- In case you don't have arduino-cli installed, upload *readValues.ino* manually to Arduino board, in order to achieve Arduino - PC connections
 
-- Optionally, run calibrate_IMU.py, in order to find offset values for your IMU.
+- Optionally, run *calibrate_IMU.py*, in order to find offset values for your IMU.
  
-- Run IMU_GUI.py for 
+- Run *IMU_GUI.py* for 
 
-- Run rpy.py for roll-pitch-yaw (R_xyz) values from IMU, as well as Complimentary Filter data fusion
+- Run *rpy.py* for roll-pitch-yaw (R_xyz) values from IMU, as well as Complimentary Filter data fusion
 
 Run and tested in Linux Ubuntu 16
 
