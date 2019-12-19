@@ -26,13 +26,15 @@ Written in Python 3.5
         SCL -> A5
         SDA -> A4
         
-- In case you have arduino-cli installed, *readValues.ino* is uploaded to Arduino automatically. Else , upload *readValues.ino* manually to board, in order to achieve Arduino - PC connection
 
 - Optionally, run *calibrate_IMU.py*, in order to find offset values for your IMU.
+
+- In case you have arduino-cli installed, *readValues.ino* is uploaded to Arduino automatically. Else , upload *readValues.ino* manually to board when requested, in order to achieve Arduino - PC connection
  
 - Run *IMU_GUI.py* for Accelerometer, Gyroscope and Temperature values from IMU
 
 - Run *rpy.py* for Roll-Pitch-Yaw (Rxyz) values from IMU, as well as Complimentary Filter data fusion
+
 
 Run and tested in Linux Ubuntu 16
 
