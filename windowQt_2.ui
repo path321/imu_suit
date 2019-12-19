@@ -6,35 +6,60 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>IMU Data - MPU 6050</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QLineEdit" name="lineEdit">
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="7" column="0" colspan="2">
+     <widget class="PlotWidget" name="myplot_3"/>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="PlotWidget" name="myplot_1"/>
+    </item>
+    <item row="5" column="0" colspan="2">
+     <widget class="PlotWidget" name="myplot_2"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLineEdit" name="lineEdit_3">
       <property name="text">
-       <string>Accelerometer </string>
+       <string>Yaw</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="PlotWidget" name="mainPlot">
-      <property name="enabled">
+      <property name="readOnly">
        <bool>true</bool>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="text">
+       <string>Roll</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLineEdit" name="lineEdit_2">
+      <property name="text">
+       <string>Pitch</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
