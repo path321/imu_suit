@@ -19,7 +19,7 @@ class MyGraph_3_2(QtWidgets.QMainWindow):
         super(MyGraph_3_2,self).__init__(parent)
         uic.loadUi(UiName,self) # load Qt window
         
-        self.listPlot=[self.myplot_1,self.myplot_2,self.myplot_3,self.myplot_4,self.myplot_5,self.myplot_6] 
+        self.listPlot = [self.myplot_1,self.myplot_2,self.myplot_3,self.myplot_4,self.myplot_5,self.myplot_6] 
         for i in range(6):  #Config plot
             self.listPlot[i].plotItem.showGrid(True, True)
             self.listPlot[i].setLabel('left', axisInfo[i%3][0] , color=axisInfo[i%3][1], size=50)
@@ -32,6 +32,7 @@ class MyGraph_3_2(QtWidgets.QMainWindow):
         self.inpt = IMU_Data()
             
     def updateGraph(self):
+        "Plot and update graph"
         #t1=clock()
         
         self.inpt.readSerial() #Read new values from IMU
@@ -48,7 +49,6 @@ class MyGraph_3_2(QtWidgets.QMainWindow):
             self.lcdNumber.display(self.inpt.getTmpr())
 
         #print("updateGraph took %.01f ms"%((clock()-t1)*1000)) #Uncomment for plot speed check
-
         QtCore.QTimer.singleShot(1, self.updateGraph) #quckly update plot
 
 
