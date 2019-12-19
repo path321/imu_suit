@@ -32,7 +32,7 @@ Written in Python 3.5
  
 - Run *IMU_GUI.py* for Accelerometer, Gyroscope and Temperature values from IMU
 
-- Run *rpy.py* for roll-pitch-yaw (R_xyz) values from IMU, as well as Complimentary Filter data fusion
+- Run *rpy.py* for roll-pitch-yaw (Rxyz) values from IMU, as well as Complimentary Filter data fusion
 
 Run and tested in Linux Ubuntu 16
 
