@@ -37,4 +37,4 @@ Written in Python 3.5
 Run and tested in Linux Ubuntu 16
 
 
-Image from results so far: ![alt text](https://github.com/path321/imu_suit/issues/1#issue-515577957) 
+Image from results so far: ![alt text](https://github.com/path321/imu_suit/issues/1) 
