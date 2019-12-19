@@ -1,6 +1,8 @@
+
 import serial
 import numpy as np
 import sys
+import subprocess
 
 from various_func import linearMap,runBash
 
@@ -13,6 +15,7 @@ accScaleFactor = {2:16384, 4:8192, 8:4096, 16:2048}
 GYRO_LIMIT = 250 
 ACC_LIMIT = 2
 
+<<<<<<< HEAD
 cli_flag=False
 
 # Check which port is connected to board
@@ -20,11 +23,21 @@ output,error = runBash("ls /dev/ttyA*")
 if output != '':
     port = output.strip()
     print("Arduino board found, connected in port "+port)
+=======
+# Check which port is connected to board
+bashCommand = "ls /dev/ttyA*"
+process = subprocess.run(bashCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, shell=True)
+output = process.stdout
+error = process.stderr
+if output != '':
+    port = output.strip()
+>>>>>>> master
 else:
     print("Error in connection, board not found, see error below for debugging:\n\n",error.strip())
     sys.exit()
 
 
+<<<<<<< HEAD
 #Check if 'arduino-cli' is installed on host
 output,error = runBash("which arduino-cli")
 if output!='':
@@ -56,13 +69,20 @@ if not cli_flag:
 
 
 # Connect serially host - board
+=======
+
+
+>>>>>>> master
 try:
     arduino = serial.Serial(port,timeout=1, baudrate = baudrate_user)
 except:
     #Common problems : Different port name, .ino sketch not uploaded
     print("Serial connection failed\nCheck board connection or that .ino uploaded correctly")
     sys.exit()
+<<<<<<< HEAD
     
+=======
+>>>>>>> master
 class IMU_Data:
     # Organize data from IMU
     def __init__(self):
