@@ -1,6 +1,9 @@
 #include<Wire.h>
 
-const int MPU=0x68;
+const int MPU=0x68; // SIGNAL_PATH_RESET 
+const int ACCEL_CONFIG = 0x1C;
+const int GYRO_CONFIG = 0x1B;
+
 int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
 double pitch,roll;
 int baudrate = 9600;
@@ -11,8 +14,23 @@ void setup(){
 Wire.begin();
 Wire.beginTransmission(MPU);
 Wire.write(0x6B);
-Wire.write(0);
+Wire.write(0); //Reset the device
 Wire.endTransmission(true);
+
+//{Range:REG_VAL} g: 2:0x00, 4:0x08, 8:0x10, 16:0x18
+Wire.beginTransmission(MPU);
+Wire.write(ACCEL_CONFIG);
+Wire.write(0x08);
+Wire.endTransmission(true);
+
+//{Range:REG_VAL} rad/s: 250:0x00 500:0x08 1000:0x10 2000:0x18
+Wire.beginTransmission(MPU);
+Wire.write(GYRO_CONFIG);
+Wire.write(0x08);
+Wire.endTransmission(true);
+
+
+
 Serial.begin(baudrate);
 
 }
@@ -20,7 +38,8 @@ Serial.begin(baudrate);
 void loop(){
 
 Wire.beginTransmission(MPU);
-Wire.write(0x3B);
+//Start reading from ACCEL_COUT_H register
+Wire.write(0x3B); 
 Wire.endTransmission(false);
 Wire.requestFrom(MPU,14,true);
 
