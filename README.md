@@ -30,7 +30,7 @@ Written in Python 3.5
 
 - Optionally, run *calibrate_IMU.py*, in order to find offset values for your IMU.
  
-- Run *IMU_GUI.py* for 
+- Run *IMU_GUI.py* for Accelerometer, Gyroscope and Temperature values from IMU
 
 - Run *rpy.py* for roll-pitch-yaw (R_xyz) values from IMU, as well as Complimentary Filter data fusion
 
