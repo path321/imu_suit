@@ -1,8 +1,7 @@
-
 import serial
 import numpy as np
 import sys
-import subprocess
+from time import time
 
 from various_func import linearMap,runBash
 
@@ -12,32 +11,22 @@ MAX_VAL = int('0xffff',16)//2 #Maximum 16-bit value
 gyroScaleFactor = {250:131, 500:65.5, 1000:32.8, 2000:16.4} # from datasheet
 accScaleFactor = {2:16384, 4:8192, 8:4096, 16:2048}
 
-GYRO_LIMIT = 250 
-ACC_LIMIT = 2
+GYRO_LIMIT = 500
+ACC_LIMIT = 4
 
-<<<<<<< HEAD
 cli_flag=False
+nameIno = 'readValues'
 
 # Check which port is connected to board
 output,error = runBash("ls /dev/ttyA*")
 if output != '':
     port = output.strip()
     print("Arduino board found, connected in port "+port)
-=======
-# Check which port is connected to board
-bashCommand = "ls /dev/ttyA*"
-process = subprocess.run(bashCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, shell=True)
-output = process.stdout
-error = process.stderr
-if output != '':
-    port = output.strip()
->>>>>>> master
 else:
     print("Error in connection, board not found, see error below for debugging:\n\n",error.strip())
     sys.exit()
 
 
-<<<<<<< HEAD
 #Check if 'arduino-cli' is installed on host
 output,error = runBash("which arduino-cli")
 if output!='':
@@ -51,15 +40,15 @@ if(cli_flag):
     param_fqbn = out1[12]
     
     # Compile sketch
-    foo,error = runBash('arduino-cli compile --fqbn '+param_fqbn+' ./readValues/') 
+    foo,error = runBash('arduino-cli compile --fqbn '+param_fqbn+' ./'+nameIno+'/') 
     if(error!=''):
-        print("Error during compiling sketch with 'arduino-cli', with error :",error,"\n\nTry buliding sketch with IDE and press 'Enter' ")
+        print("Error during compiling sketch with 'arduino-cli', with error :\n",error)
         cli_flag=False
     else:
         # Upload sketch
-        foo,error = runBash("arduino-cli upload -p "+ port +" --fqbn "+ param_fqbn +" ./readValues/")
+        foo,error = runBash("arduino-cli upload -p "+ port +" --fqbn "+ param_fqbn +' ./'+nameIno+'/')
         if(error!=''):
-            print("Error during uploading sketch with 'arduino-cli', with error :",error,"\n\nTry buliding sketch with IDE and press 'Enter' ")
+            print("Error during uploading sketch with 'arduino-cli', with error :\n",error)
             cli_flag=False
         
     
@@ -69,22 +58,15 @@ if not cli_flag:
 
 
 # Connect serially host - board
-=======
-
-
->>>>>>> master
 try:
     arduino = serial.Serial(port,timeout=1, baudrate = baudrate_user)
 except:
     #Common problems : Different port name, .ino sketch not uploaded
     print("Serial connection failed\nCheck board connection or that .ino uploaded correctly")
     sys.exit()
-<<<<<<< HEAD
     
-=======
->>>>>>> master
 class IMU_Data:
-    # Organize data from IMU
+    "Organize data from IMU"
     def __init__(self):
 
         inpt = np.loadtxt("calib_values.txt",dtype=int) # Load calibration values from respctive txt
@@ -107,17 +89,21 @@ class IMU_Data:
         self.gyY = 0 
         self.gyZ = 0 
 
-        self.rawValue = np.zeros(7)
+        self.num_of_data = 7 # 3 acc + 1 temp + 3 gyro
+        
+        self.rawValue = np.zeros(self.num_of_data)
 
-    def readSerial(self,silent = False): # Read Data from serial input ( Arduino )
+        self.timestamp = self.getTimeNow() # measure for when readSerial is called
 
+    def readSerial(self,silent = False):
+        "Read Data from serial input ( Arduino )"
         inpt=[]
         error_in_comm = False
         
         while(arduino.read_until().strip()!=b"S"):
             pass
         
-        for i in range(7):
+        for i in range(self.num_of_data):
             try:
                 inpt.append(float(arduino.read_until().strip()))
             except ValueError:
@@ -130,36 +116,46 @@ class IMU_Data:
             inpt=self.readSerial() 
         else:
             self.rawValue=inpt #return data
+            self.timestamp = self.getTimeNow()
 
     
-    def getAccRaw(self): #Accelerometer values after offset correction
-        
+    def getAccRaw(self): 
+        "Accelerometer values after offset correction"
         self.accX = self.rawValue[0] + self.accX_offset
         self.accY = self.rawValue[1] + self.accY_offset
         self.accZ = self.rawValue[2] + self.accZ_offset
         return np.array([self.accX, self.accY, self.accZ])
         
-    def getAcc(self): #Accelerometer values after offset correction, in degrees/s
-        return self.getAccRaw() / accScaleFactor[ACC_LIMIT] 
+    def getAcc(self):
+        "Accelerometer values after offset correction, in degrees/s"
+        return self.getAccRaw() / accScaleFactor[ACC_LIMIT]
     
-    def getTmprRaw(self): #Temperature values after offset correction
+    def getTmprRaw(self):
+        "Temperature values after offset correction"
         return np.array([self.rawValue[3] + self.tmpr_offset])
 
-    def getTmpr(self): #Temperature values after offset correction, in Celsius
+    def getTmpr(self):
+        "Temperature values after offset correction, in Celsius"
         return linearMap(self.getTmprRaw(),85,-40,MAX_VAL,-MAX_VAL)
         
-    def getGyroRaw(self): #Gyroscope values after offset correction
-        
+    def getGyroRaw(self):
+        "Gyroscope values after offset correction"        
         self.gyX = self.rawValue[4] + self.gyX_offset
         self.gyY = self.rawValue[5] + self.gyY_offset
         self.gyZ = self.rawValue[6] + self.gyZ_offset
         return np.array([self.gyX, self.gyY, self.gyZ])
 
-    def getGyro(self): #Gyroscope values after offset correction, in g
+    def getGyro(self):
+        "Gyroscope values after offset correction, in g"
         return self.getGyroRaw() / gyroScaleFactor[GYRO_LIMIT]
 
-    def getRawValues(self): #IMU values, without offset correction
+    def getRawValues(self):
+        "IMU values, without offset correction"
         return np.array(self.rawValue)
+
+    def getTimeNow(self):
+        "Return the time in seconds since the epoch"
+        return time()
 
     
         
