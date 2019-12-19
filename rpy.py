@@ -74,14 +74,14 @@ class MyGraph(QtWidgets.QMainWindow):
         self.accVal_LP = lowPass(accVal,prevAccVal,a_LP)
         
         self.rollAcc = atan2(self.accVal_LP[1],self.accVal_LP[2])*180/pi 
-        self.pitchAcc = atan2(self.accVal_LP[0],self.accVal_LP[2])*180/pi
+        self.pitchAcc = -atan2(self.accVal_LP[0],self.accVal_LP[2])*180/pi
         
 
         # roll,pitch with Complimentary filter
         self.roll_CF += gyroVal[0]*elapsed
         self.pitch_CF += gyroVal[1]*elapsed
         
-        a_CF = .85 #0.8 # Complimentary filter weight parameter
+        a_CF = 0.95 # Complimentary filter weight parameter
         
         self.roll_CF = (1-a_CF)*self.rollAcc + (a_CF)*self.roll_CF
         self.pitch_CF = (1-a_CF)*self.pitchAcc + (a_CF)*self.pitch_CF
