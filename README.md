@@ -29,7 +29,7 @@ Written in Python 3.5
 
 - Optionally, run *calibrate_IMU.py*, in order to find offset values for your IMU.
 
-- In case you have arduino-cli installed, *readValues.ino* is uploaded to Arduino automatically. Else , upload *readValues.ino* manually to board when requested, in order to achieve Arduino - PC connection
+- In case you have arduino-cli installed, *readValues.ino* will be uploaded to Arduino automatically. Else, upload *readValues.ino* manually to board when requested, in order to achieve Arduino - PC connection
  
 - Run *IMU_GUI.py* for Accelerometer, Gyroscope and Temperature values from IMU
 
