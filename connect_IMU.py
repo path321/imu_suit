@@ -204,9 +204,15 @@ class IMU_Data:
         prevAccVal = self.accVal_LP      
         a_LP = 0.8 # Low Pass filter weight parameter
         self.accVal_LP = lowPass(accVal,prevAccVal,a_LP)
+
+        # roll_Acc = atan2(Ay / ((sgn(Az)*(Az^2 + m*Ax^2)^0.5) , for better stability
+        m = 1e-2 # Arbitary small factor
+        # roll_Acc : (-180,180]
+        self.rpAcc[0] = atan2(self.accVal_LP[1],np.sign(self.accVal_LP[2])*sqrt(self.accVal_LP[2]**2 + m*self.accVal_LP[0]**2))*180/pi
         
-        self.rpAcc[0] = atan2(self.accVal_LP[1],self.accVal_LP[2])*180/pi 
-        self.rpAcc[1] = atan2(-self.accVal_LP[0],sqrt(self.accVal_LP[1]**2 + self.accVal_LP[2]**2))*180/pi
+        # pitch_Acc = atan2(-Ax / (Ay^2 + Az^2)^0.5) , always stable
+        # pitch : (-90,90]
+        self.rpAcc[1] = atan2(-self.accVal_LP[0],sqrt(self.accVal_LP[1]**2 + self.accVal_LP[2]**2))*180/pi # 
         
 
         # roll,pitch with Complimentary filter
