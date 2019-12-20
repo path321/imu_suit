@@ -8,7 +8,7 @@ def linearMap(value,newMax,newMin,oldMax,oldMin):
 
 
 def appendData(myList,val):
-        '''perfrom FIFO insertion in a list
+        '''Perfrom FIFO insertion in a list
            alternative : deque.append() deque.pop()'''
         lenList = len(myList)
         myList=np.append(myList,val)
@@ -23,12 +23,12 @@ def lowPass2(now,prev,prev2):
         "2nd order low pass filter in 1D"
         return (0.7*now + 0.2*prev+ 0.1*prev2)
 
-def checkAz(inpt):
-        "Limit input in [180,-180)"
-        if(inpt > 180):
-                inpt -= 360
-        elif(inpt <= -180):
-                inpt += 360
+def checkAz(inpt,limit):
+        "Limit input in [limit,-limit)"
+        if(inpt > limit):
+                inpt -= limit*2
+        elif(inpt <= -limit):
+                inpt += limit*2
         return inpt
 
 def runBash(inpt):
@@ -40,3 +40,6 @@ def runBash(inpt):
         output = (process.stdout).strip()
         error = (process.stderr).strip()
         return output,error
+
+
+
