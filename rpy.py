@@ -51,12 +51,12 @@ class MyGraph(QtWidgets.QMainWindow):
         self.inpt.computeAngle()
 
         self.vrt[0]=appendData(self.vrt[0],self.inpt.rpAcc[0])
-        self.vrt[1]=appendData(self.vrt[1],checkAz(self.inpt.rpyGyro[0])) #  Update graph line
-        self.vrt[2]=appendData(self.vrt[2],checkAz(self.inpt.rp_CF[0]))
+        self.vrt[1]=appendData(self.vrt[1],checkAz(self.inpt.rpyGyro[0],180)) #  Update graph line
+        self.vrt[2]=appendData(self.vrt[2],checkAz(self.inpt.rp_CF[0],180))
         self.vrt[3]=appendData(self.vrt[3],self.inpt.rpAcc[1])
-        self.vrt[4]=appendData(self.vrt[4],checkAz(self.inpt.rpyGyro[1])) #  Update graph line
-        self.vrt[5]=appendData(self.vrt[5],checkAz(self.inpt.rp_CF[1]))
-        self.vrt[6]=appendData(self.vrt[6],checkAz(self.inpt.rpyGyro[2]))
+        self.vrt[4]=appendData(self.vrt[4],checkAz(self.inpt.rpyGyro[1],90)) #  Update graph line
+        self.vrt[5]=appendData(self.vrt[5],checkAz(self.inpt.rp_CF[1],90))
+        self.vrt[6]=appendData(self.vrt[6],checkAz(self.inpt.rpyGyro[2],180))
         
         pen1 = pg.mkPen(color=(255, 0, 0), width=2, style=QtCore.Qt.SolidLine)
         pen2 = pg.mkPen(color=(0, 0, 255), width=2, style=QtCore.Qt.SolidLine)
