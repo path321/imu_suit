@@ -1,9 +1,11 @@
 import serial
 import numpy as np
 import sys
-from time import time
 
-from various_func import linearMap,runBash
+from time import time
+from math import pi,atan2,sqrt
+
+from various_func import linearMap,runBash,lowPass
 
 MAX_VAL = int('0xffff',16)//2 #Maximum 16-bit value
 
@@ -74,6 +76,7 @@ class ConnectBoard:
         else:
             return ser
 
+
         
 
 class IMU_Data:
@@ -109,7 +112,15 @@ class IMU_Data:
         
         self.rawValue = np.zeros(self.__num_of_data)
 
-        self.timestamp = self.getTimeNow() # measure for when readSerial is called
+        self.timestamp = 0 
+        self.readSerial()
+        self.prev_t = self.timestamp
+        self.accVal_LP = 0
+        self.rpyGyro = self.getGyro() # Indexing:  0:Roll, 1:Pitch, 2:Yaw  
+        self.rpAcc = np.zeros(2) # Indexing:  0:Roll, 1:Pitch
+        self.rp_CF = np.zeros(2) # Indexing:  0:Roll, 1:Pitch
+        
+        
 
     def readSerial(self,silent = False):
         "Read Data from serial input ( Arduino )"
@@ -132,8 +143,7 @@ class IMU_Data:
             inpt=self.readSerial() 
         else:
             self.rawValue = inpt #return data
-            self.timestamp = self.getTimeNow()
-
+            self.timestamp = self.getTimeNow() # measure for when readSerial is called
     
     def getAccRaw(self): 
         "Accelerometer values after offset correction"
@@ -172,6 +182,42 @@ class IMU_Data:
     def getTimeNow(self):
         "Return the time in seconds since the epoch"
         return time()
+
+    def computeAngle(self):
+        '''Compute roll,pitch from gyro & acc data w/o filtering
+        Should be called continuously for correct results'''
+
+        self.prev_t = self.timestamp
+        self.readSerial() # Read new values from IMU
+        elapsed = self.timestamp - self.prev_t  # Elapsed time between 2 consecuive readings
+        #print(elapsed)
+
+        # roll,pitch from gyro
+        gyroVal = self.getGyro()
+        
+        self.rpyGyro += gyroVal*elapsed # Indexing:  0:Roll, 1:Pitch, 2:Yaw  
+    
+
+        # roll,pitch from accelerometer
+        accVal = self.getAcc()
+        
+        prevAccVal = self.accVal_LP      
+        a_LP = 0.8 # Low Pass filter weight parameter
+        self.accVal_LP = lowPass(accVal,prevAccVal,a_LP)
+        
+        self.rpAcc[0] = atan2(self.accVal_LP[1],self.accVal_LP[2])*180/pi 
+        self.rpAcc[1] = atan2(-self.accVal_LP[0],sqrt(self.accVal_LP[1]**2 + self.accVal_LP[2]**2))*180/pi
+        
+
+        # roll,pitch with Complimentary filter
+        self.rp_CF[0] += gyroVal[0]*elapsed
+        self.rp_CF[1] += gyroVal[1]*elapsed
+        
+        a_CF = 0.95 # Complimentary filter weight parameter
+        
+        self.rp_CF[0] = (1-a_CF)*self.rpAcc[0] + (a_CF)*self.rp_CF[0]
+        self.rp_CF[1] = (1-a_CF)*self.rpAcc[1] + (a_CF)*self.rp_CF[1]
+    
     
 
 
