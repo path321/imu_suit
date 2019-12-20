@@ -38,5 +38,6 @@ Written in Python 3.5
 
 Run and tested in Linux Ubuntu 16
 
+*The project is currently in progress*
 
 Image from results so far: ![alt text](https://github.com/path321/imu_suit/issues/1) 
