@@ -2,7 +2,6 @@ import numpy as np
 from time import clock,sleep
 from connect_IMU import *
 
-MAX_VAL = int('0xffff',16)//2
 
 def main():
 
