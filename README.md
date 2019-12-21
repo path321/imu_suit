@@ -1,4 +1,4 @@
-## IMU GUI
+## IMU Suit
 
 A graphical interface for exploring MPU-6050 capabilities and generally IMUs performance, through data plot and 
 data processing algorithms
