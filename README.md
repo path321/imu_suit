@@ -1,4 +1,4 @@
-## IMU GUI
+## IMU Suit
 
 A graphical interface for exploring MPU-6050 capabilities and generally IMUs performance, through data plot and 
 data processing algorithms
@@ -38,6 +38,5 @@ Written in Python 3.5
 
 Run and tested in Linux Ubuntu 16
 
-*The project is currently in progress*
 
 Image from results so far: ![alt text](https://github.com/path321/imu_suit/issues/1) 
