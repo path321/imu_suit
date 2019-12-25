@@ -24,18 +24,8 @@ class ConnectBoard:
         self.__nameIno = 'readValues'
         self.port = None
                 
-    def checkDependencies(self):
-        "Check if needed packages are installed"
-        dependList = ['numpy','pyserial','PyQt5','pyqtgraph']
-        reqs,foo = runBash("python3 -m pip freeze")
-        installed_packages = [r.split('==')[0] for r in reqs.split()]
-
-        for pkg in dependList:
-            if not pkg in installed_packages:
-                print("%s package not found in host PC. Abort."%(pkg))
-                sys.exit()
-        
-        #Check if 'arduino-cli' is installed on host
+    def checkArdCli(self):
+        "Check if 'arduino-cli' is installed on host"
         output,error = runBash("which arduino-cli")
         if output!='':
             self.cli_flag=True # arduino-cli is installed, thus will be used below for uploading .ino on board
@@ -84,7 +74,7 @@ class IMU_Data:
     def __init__(self):
 
         cnct = ConnectBoard()
-        cnct.checkDependencies()
+        cnct.checkArdCli()
         cnct.uploadIno()
         self.__ser = cnct.connectSerial()
 
